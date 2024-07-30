@@ -1,0 +1,9 @@
+name: WorldCleaner
+version: '1.0-SNAPSHOT'
+main: winlyps.worldCleaner.WorldCleaner
+api-version: '1.20'
+author: [Winlyps]
+commands:
+  zlomiarz:
+    description: Opens the GUI to view cleaned items.
+    usage: /zlomiarz
