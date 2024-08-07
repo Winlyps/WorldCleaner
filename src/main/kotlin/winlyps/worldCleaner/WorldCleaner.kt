@@ -1,8 +1,6 @@
-//1.File: WorldCleaner.kt
 package winlyps.worldCleaner
 
 import org.bukkit.Bukkit
-import org.bukkit.Material
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
@@ -20,6 +18,7 @@ import java.util.*
 class WorldCleaner : JavaPlugin(), CommandExecutor, Listener {
 
     private val collectedItems: Inventory = Bukkit.createInventory(null, 54, "Collected Items")
+    private val closeTaskIds: MutableSet<Int> = mutableSetOf()
 
     override fun onEnable() {
         // Plugin startup logic
@@ -48,12 +47,13 @@ class WorldCleaner : JavaPlugin(), CommandExecutor, Listener {
             sender.openInventory(collectedItems)
 
             // Schedule the inventory to close after 10 seconds (200 ticks)
-            Bukkit.getScheduler().runTaskLater(this, Runnable {
+            val taskId = Bukkit.getScheduler().runTaskLater(this, Runnable {
                 if (sender.openInventory.topInventory == collectedItems) {
                     sender.closeInventory()
                 }
-            }, 200L) // 200 ticks = 10 seconds
+            }, 200L).taskId // 200 ticks = 10 seconds
 
+            closeTaskIds.add(taskId)
             return true
         }
         return false
@@ -66,7 +66,11 @@ class WorldCleaner : JavaPlugin(), CommandExecutor, Listener {
 
     @EventHandler
     fun onInventoryClose(event: InventoryCloseEvent) {
-        // Optional: You can add logic here if you want to track when the inventory is closed
+        // Cancel all scheduled tasks to close the inventory
+        closeTaskIds.forEach { taskId ->
+            Bukkit.getScheduler().cancelTask(taskId)
+        }
+        closeTaskIds.clear()
     }
 
     private fun addItemToInventory(inventory: Inventory, itemStack: ItemStack) {
