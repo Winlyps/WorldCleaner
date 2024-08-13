@@ -1,9 +1,14 @@
 name: WorldCleaner
 version: '1.0-SNAPSHOT'
 main: winlyps.worldCleaner.WorldCleaner
-api-version: '1.20'
+api-version: '1.16'
 author: [Winlyps]
 commands:
-  zlomiarz:
-    description: Opens the GUI to view cleaned items.
-    usage: /zlomiarz
+  dustman:
+    description: Opens the collected items inventory.
+    permission: worldcleaner.dustman
+    usage: /dustman
+permissions:
+  worldcleaner.dustman:
+    description: Allows the player to use the /dustman command.
+    default: op

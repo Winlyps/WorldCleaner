@@ -23,9 +23,9 @@ class WorldCleaner : JavaPlugin(), CommandExecutor, Listener {
     override fun onEnable() {
         // Plugin startup logic
         Bukkit.getPluginManager().registerEvents(this, this)
-        getCommand("zlomiarz")?.setExecutor(this)
+        getCommand("dustman")?.setExecutor(this) // Change command here
 
-        // Schedule task to clean items every 2 minutes
+        // Schedule task to clean items every 10 minutes
         Bukkit.getScheduler().runTaskTimer(this, Runnable {
             Bukkit.getWorlds().forEach { world ->
                 world.entities.filter { it.type == EntityType.DROPPED_ITEM }
@@ -35,7 +35,7 @@ class WorldCleaner : JavaPlugin(), CommandExecutor, Listener {
                             item.remove()
                         }
             }
-        }, 2400L, 2400L) // 2400 ticks = 2 minutes
+        }, 12000L, 12000L) // 12000 ticks = 10 minutes
     }
 
     override fun onDisable() {
@@ -43,7 +43,12 @@ class WorldCleaner : JavaPlugin(), CommandExecutor, Listener {
     }
 
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
-        if (sender is Player && command.name.equals("zlomiarz", ignoreCase = true)) {
+        if (sender is Player && command.name.equals("dustman", ignoreCase = true)) { // Change command check here
+            if (!sender.hasPermission("worldcleaner.dustman")) {
+                sender.sendMessage("You do not have permission to use this command.")
+                return true
+            }
+
             sender.openInventory(collectedItems)
 
             // Schedule the inventory to close after 10 seconds (200 ticks)
