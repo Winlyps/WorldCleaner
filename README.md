@@ -6,5 +6,5 @@
 
 Required permission to execute the command: ``` worldcleaner.dustman ```
 
-- Players who have op ( ./op <nickname> ) have access to it by default.
+- Players who have op ( ./op nickname ) have access to it by default.
 - Check out other plugins: https://modrinth.com/user/Winlyps
